@@ -100,6 +100,29 @@ export class Services {
 
     }
 
+    //get posts
+
+    async getPosts(Queries =[Query.equal("status","active")]){
+
+        try {
+          return  await this.databases.listDocuments(
+              config.appwriterDatabaseID,
+                config.appwriterTableID,
+                Queries,
+           )
+
+            
+        } catch (error) {
+            throw error ;
+            return false ;
+        }
+    }
+
+
+
+
+    // flile upload
+
 }
 
 const services = new Services() ;
