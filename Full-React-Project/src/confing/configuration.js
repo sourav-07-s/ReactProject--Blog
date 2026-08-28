@@ -60,6 +60,27 @@ export class Services {
 
     }
 
+    // delete post 
+    async deletePost(slug){
+
+        try {
+
+            await this.databases.deleteDocument(
+                config.appwriterDatabaseID,
+                config.appwriterTableID,
+                slug
+            )
+
+            return true 
+            
+        } catch (error) {
+            throw error ;
+            return false ;
+            
+        }
+
+    }
+
 }
 
 const services = new Services() ;
