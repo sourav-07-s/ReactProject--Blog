@@ -122,6 +122,35 @@ export class Services {
 
 
     // flile upload
+ async uploadFile(file){
+    try {
+        return await this.bucket.createFile(
+            config.appweiterBucketID,
+            ID.unique(),
+            file
+        )
+    } catch (error) {
+        throw error ;
+        return false ;
+    }
+ }
+
+
+ // file delete
+
+  async deleteFile(fileId){
+    try {
+        await this.bucket.deleteFile(
+            config.appweiterBucketID,
+            ID.unique(),
+            fileId
+        )
+        return true ;
+    } catch (error) {
+        throw error ;
+        return false ;
+    }
+ }
 
 }
 
