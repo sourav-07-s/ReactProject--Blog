@@ -81,6 +81,25 @@ export class Services {
 
     }
 
+    // getPost
+
+    async getPost(slug){
+
+        try {
+             return await this.databases.getDocument(
+                config.appwriterDatabaseID,
+                config.appwriterTableID,
+                slug
+            )
+            
+        } catch (error) {
+            throw error ;
+            return false ;
+            
+        }
+
+    }
+
 }
 
 const services = new Services() ;
