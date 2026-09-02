@@ -152,6 +152,15 @@ export class Services {
     }
  }
 
+
+ // file preview
+ getFilepreview(fileId){
+    this.bucket.getFilePreview(
+        config.appweiterBucketID,
+        fileId
+    )
+
+ }
 }
 
 const services = new Services() ;
