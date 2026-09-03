@@ -37,7 +37,7 @@ export const App = () => {
    
 return !loading ? (
 <div className="min-h-screen bg-gray-800">
-  <div className="w-full max-w-5xl mx-auto block bg-gray-700 min-h-screen">
+  <div className="w-full block bg-gray-700  ">
 
     <Header />
 
