@@ -94,7 +94,7 @@ const Login = () => {
                 <Button 
                 type="submit"
                 
-                >Sign Up</Button>
+                >Sign Up Now</Button>
 
             </div>
            </form>
