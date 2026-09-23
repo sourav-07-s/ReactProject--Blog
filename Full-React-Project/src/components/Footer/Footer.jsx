@@ -10,7 +10,7 @@ export default function Footer() {
               to="/"
               className="text-2xl font-bold"
             >
-              ShopAssist
+              Logo
             </Link>
           </div>
 
