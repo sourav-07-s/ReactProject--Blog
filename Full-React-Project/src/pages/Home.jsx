@@ -1,37 +1,101 @@
-import React ,{useEffect , useState} from 'react'
-import {Container , PostForm} from "../components"
-import AppwriteService from "../appwrite/conf"
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export const Home = () => {
-   
+import {
+  Container,
+  PostCard,
+} from "../components";
 
-    const [post ,setpost] = useState([])
+import service from "../appwrite/conf";
 
- useEffect(()=>{}, [])
+const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] =
+    useState(false);
 
-  AppwriteService.getPost().then((post)=> {
-    if(post){
-        setpost(post.documents)
+  const authStatus = useSelector(
+    (state) => state.auth.status
+  );
+
+  useEffect(() => {
+    if (!authStatus) {
+      return;
     }
-  })
 
+    setLoading(true);
 
- 
-   if(post.length === 0){
-   return (
-  <div className="w-full py-8">
-    <Container>
-      <div className="flex flex-wrap">
-        {posts.map((post) => (
-          <div key={post.$id} className="p-2 w-1/4">
-            <PostCard {...post} />
-          </div>
-        ))}
+    service
+      .getPosts()
+      .then((response) => {
+        setPosts(response?.documents || []);
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to load posts:",
+          error
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [authStatus]);
+
+  if (!authStatus) {
+    return (
+      <div className="w-full py-8 text-center">
+        <Container>
+          <h1 className="text-2xl font-bold">
+            Login to read posts
+          </h1>
+
+          <Link
+            to="/login"
+            className="inline-block mt-4 px-5 py-2 rounded-lg bg-blue-600 text-white"
+          >
+            Login
+          </Link>
+        </Container>
       </div>
-    </Container>
-  </div>
-)
+    );
+  }
 
-   }  
+  if (loading) {
+    return (
+      <div className="w-full py-8 text-center">
+        Loading posts...
+      </div>
+    );
+  }
 
-}
+  if (posts.length === 0) {
+    return (
+      <div className="w-full py-8 text-center">
+        <Container>
+          <h1 className="text-2xl font-bold">
+            No posts available
+          </h1>
+        </Container>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full py-8">
+      <Container>
+        <div className="flex flex-wrap">
+          {posts.map((post) => (
+            <div
+              key={post.$id}
+              className="w-full md:w-1/2 lg:w-1/4 p-2"
+            >
+              <PostCard {...post} />
+            </div>
+          ))}
+        </div>
+      </Container>
+    </div>
+  );
+};
+
+export default Home;

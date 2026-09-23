@@ -1,33 +1,58 @@
+import { useEffect, useState } from "react";
 
-import React , {useState , useEffect} from 'react'
+import {
+  Container,
+  PostCard,
+} from "../components";
 
-import {Container , PostCard} from "../components"
-import AppwriteService from "../appwrite/conf"
+import service from "../appwrite/conf";
 
 const AllPost = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] =
+    useState(true);
 
- const [post ,setpost] = useState([])
- useEffect(()=>{}, [])
+  useEffect(() => {
+    service
+      .getPosts()
+      .then((response) => {
+        setPosts(response?.documents || []);
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to load posts:",
+          error
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-  AppwriteService.getPost([]).then((post)=> {
-    if(post){
-        setpost(post.documents)
-    }
-  })
+  if (loading) {
+    return (
+      <div className="w-full py-8 text-center">
+        Loading posts...
+      </div>
+    );
+  }
 
   return (
-    <div  className= " w-full py-8">
-        <Container>
-           <div className="flex flex-wrap " > 
-             {post.map((post)=>(
-                <div key = {post.$id}  className= "p-2 w-1/4" > 
-                  <PostCard post ={post} />
-                </div>
-            ))}
-           </div>
-        </Container>
+    <div className="w-full py-8">
+      <Container>
+        <div className="flex flex-wrap">
+          {posts.map((post) => (
+            <div
+              key={post.$id}
+              className="w-full md:w-1/2 lg:w-1/4 p-2"
+            >
+              <PostCard {...post} />
+            </div>
+          ))}
+        </div>
+      </Container>
     </div>
-  )
-}
+  );
+};
 
-export default AllPost
+export default AllPost;

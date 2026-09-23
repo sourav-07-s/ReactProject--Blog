@@ -1,86 +1,74 @@
 import config from "../confing/confing";
-import {Client , ID, Account} from "appwrite"
+import { Client, ID, Account } from "appwrite";
 
+export class AuthService {
+  client = new Client();
+  account;
 
+  constructor() {
+    this.client
+      .setEndpoint(config.appwriteUrl)
+      .setProject(config.appwriteProjectId);
 
+    this.account = new Account(this.client);
+  }
 
-export class AuthService{
-
-    client = new Client();
-    account ;
-
-    constructor(){
-        this.client 
-              .setEndpoint(config.appwriteUrl)
-              .setProject(config.appwriterProjectID)
-
-        this.account = new Account(this.client) ;     
-
-        this.account
-             
-    }
-
-    //create Account
-
-   async createAccount({email,password,name}){
-
+  // Create account
+  async createAccount({ email, password, name }) {
     try {
-        const userAccount = await this.account.create(ID.unique(),email,password,name)
+      const userAccount = await this.account.create({
+        userId: ID.unique(),
+        email,
+        password,
+        name,
+      });
 
-        if(userAccount){
-            return this.login({email,password})
+      if (userAccount) {
+        return await this.login({ email, password });
+      }
 
-        }
-
-        else {
-            return userAccount ;
-        }
-        
+      return null;
     } catch (error) {
-        throw error ;
-        
+      throw error;
     }
-   }
+  }
 
-   //login
-
-   async login ({email,password}){
-
+  // Login
+  async login({ email, password }) {
     try {
-        const login = await this.account.createEmailPasswordSession(email,password)
-
-        return login ;
-        
+      return await this.account.createEmailPasswordSession({
+        email,
+        password,
+      });
     } catch (error) {
-        throw error ;
-        
+      throw error;
     }
+  }
 
-   }
-
-   // get current user 
+  // Get current user
   async getCurrentUser() {
     try {
-        return await this.account.get();
+      return await this.account.get();
     } catch (error) {
-        console.log("No user logged in");
+      if (error?.code === 401) {
         return null;
-    }
-}
+      }
 
-   //Logout
-   async logout(){
+      console.error("Error getting current user:", error);
+      return null;
+    }
+  }
+
+  // Logout
+  async logout() {
     try {
-        this.account.deleteSessions();
-        
+      return await this.account.deleteSessions();
     } catch (error) {
-        throw error ;
-        
+      throw error;
     }
-   }
+  }
 }
 
-const authoService = new AuthService() ;
+const authoService = new AuthService();
 
-
-export default authoService ;
+export default authoService;
