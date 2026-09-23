@@ -3,10 +3,20 @@ import Footer from './Footer/Footer';
 import Container from './Container/Container';
 import LogoutBtn from './Header/LgoutBtn';
 import RTE from './RTE';
+import Signup from './Signup'
+import Login from './LLogin'
+import PostForm from "./post-Form/PostForm"
+import PostCard from './PostCard'
+
 export {
     Header,
     Footer,
     Container,
     LogoutBtn,
-    RTE
+    RTE,
+    Signup,
+    Login,
+    Post,
+    PostForm,
+    PostCard
 }
