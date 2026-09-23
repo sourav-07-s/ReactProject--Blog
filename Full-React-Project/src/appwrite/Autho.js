@@ -59,15 +59,14 @@ export class AuthService{
    }
 
    // get current user 
-   async getCurrentUser() {
+  async getCurrentUser() {
     try {
         return await this.account.get();
-
     } catch (error) {
-        throw error ;
+        console.log("No user logged in");
+        return null;
     }
-    return null ;
-   }
+}
 
    //Logout
    async logout(){
