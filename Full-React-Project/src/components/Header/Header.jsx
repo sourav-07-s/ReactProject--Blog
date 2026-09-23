@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom"
 
 export const Header = () => {
  
-  const AuthStatus = useSelector((state)=>{state.auth.status})
+ const AuthStatus = useSelector((state) => state.auth.status);
 
   const navigate = useNavigate();
 
@@ -41,18 +41,18 @@ export const Header = () => {
       <Container>
         <nav className="flex" >
           <div className="mr-4">
-            <link
+            <Link
             to="/"
              className="font-extrabold" >
             logo
-            </link>
+            </Link>
           </div>
                    <ul className =" flex ml-auto">
                     {navItem.map((item)=> 
                     item.active ? (
                       <li key={item.name}>
                         <button
-                        onClick={()=> navigate(item.slug)}
+                        onClick={()=> navigate(item.path)}
 
                         className="inline-block px-6 py-2 duration-200 hover:bg-violet-300 rounded-lg"
                         
