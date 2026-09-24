@@ -106,7 +106,7 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full hover: cursor-pointer  "
             >
               Sign In
             </Button>
