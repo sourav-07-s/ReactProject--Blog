@@ -6,6 +6,8 @@ import {
   Databases,
   Storage,
   Query,
+  Permission,
+  Role,
 } from "appwrite";
 
 export class Service {
@@ -95,17 +97,23 @@ export class Service {
   }
 
   // Upload file
-  async uploadFile(file) {
-    if (!file) {
-      return null;
-    }
-
-    return await this.bucket.createFile({
-      bucketId: config.appwriteBucketId,
-      fileId: ID.unique(),
-      file,
-    });
+  async uploadFile(file, userId) {
+  if (!file) {
+    return null;
   }
+
+  return await this.bucket.createFile({
+    bucketId: config.appwriteBucketId,
+    fileId: ID.unique(),
+    file,
+
+    permissions: [
+      Permission.read(Role.any()),
+      Permission.update(Role.user(userId)),
+      Permission.delete(Role.user(userId)),
+    ],
+  });
+}
 
   // Delete file
   async deleteFile(fileId) {

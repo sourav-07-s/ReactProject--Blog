@@ -11,7 +11,7 @@ export class Services {
     constructor (){
          this.client 
               .setEndpoint(config.appwriteUrl)
-              .setProject(config.appwriterProjectID)
+              .setProject(config.appwriteProjectId)
 
          this.databases = new Databases(this.client);
          this.bucket = new Storage(this.client)
@@ -24,8 +24,8 @@ export class Services {
         try {
 
             return await this.databases.createDocument(
-                config.appwriterDatabaseID,
-                config.appwriterTableID,
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
                 slug,
                 {title,content,featuredImages,status,userId}
             )
@@ -42,8 +42,8 @@ export class Services {
 
         try {
             return await this.databases.updateDocument(
-                config.appwriterDatabaseID,
-                config.appwriterTableID,
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
                 slug,
                 {
                     title,
@@ -66,8 +66,8 @@ export class Services {
         try {
 
             await this.databases.deleteDocument(
-                config.appwriterDatabaseID,
-                config.appwriterTableID,
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
                 slug
             )
 
@@ -87,8 +87,8 @@ export class Services {
 
         try {
              return await this.databases.getDocument(
-                config.appwriterDatabaseID,
-                config.appwriterTableID,
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
                 slug
             )
             
@@ -106,8 +106,8 @@ export class Services {
 
         try {
           return  await this.databases.listDocuments(
-              config.appwriterDatabaseID,
-                config.appwriterTableID,
+              config.appwriteDatabaseId,
+                config.appwriteCollectionId,
                 Queries,
            )
 
@@ -125,7 +125,7 @@ export class Services {
  async uploadFile(file){
     try {
         return await this.bucket.createFile(
-            config.appweiterBucketID,
+            config.appwriteBucketId,
             ID.unique(),
             file
         )
@@ -141,7 +141,7 @@ export class Services {
   async deleteFile(fileId){
     try {
         await this.bucket.deleteFile(
-            config.appweiterBucketID,
+            config.appwriteBucketId,
             ID.unique(),
             fileId
         )
@@ -156,7 +156,7 @@ export class Services {
  // file preview
  getFilepreview(fileId){
     this.bucket.getFilePreview(
-        config.appweiterBucketID,
+        config.appwriteBucketId,
         fileId
     )
 

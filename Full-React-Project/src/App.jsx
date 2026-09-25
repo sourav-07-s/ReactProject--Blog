@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import authoService from "./appwrite/Autho";
@@ -11,8 +11,21 @@ export const App = () => {
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
+    // Don't call Appwrite account.get()
+    // on Login and Signup pages
+    if (
+      location.pathname === "/login" ||
+      location.pathname === "/signup"
+    ) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
     authoService
       .getCurrentUser()
       .then((userData) => {
@@ -25,7 +38,7 @@ export const App = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [dispatch]);
+  }, [location.pathname, dispatch]);
 
   if (loading) {
     return (

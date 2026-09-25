@@ -24,30 +24,37 @@ const PostForm = ({ post }) => {
 
   const navigate = useNavigate();
 
-  // FIX 1: Redux path
   const userdata = useSelector(
     (state) => state.auth.userData
   );
 
   const submit = async (data) => {
     try {
-      // FIX 2: Update existing post
+    
+      // UPDATE
+      
       if (post) {
         let file = null;
 
         if (data.image?.[0]) {
-          file = await service.uploadFile(data.image[0]);
+          file = await service.uploadFile(
+            data.image[0]
+          );
         }
 
         if (file && post.featuredImage) {
-          await service.deleteFile(post.featuredImage);
+          await service.deleteFile(
+            post.featuredImage
+          );
         }
 
-        // FIX 3: await updatePost
+        // CHANGE: remove image before sending to DB
+        const { image, ...postData } = data;
+
         const dbpost = await service.updatePost(
           post.$id,
           {
-            ...data,
+            ...postData,
             featuredImage: file
               ? file.$id
               : post.featuredImage,
@@ -61,32 +68,43 @@ const PostForm = ({ post }) => {
         return;
       }
 
-      // FIX 4: Create new post
+     
+      // CREATE
+      
       if (!userdata) {
         console.error("User is not logged in");
         return;
       }
 
       if (!data.image?.[0]) {
-        console.error("Featured image is required");
+        console.error(
+          "Featured image is required"
+        );
         return;
       }
 
-      const file = await service.uploadFile(
-        data.image[0]
-      );
+   const file = await service.uploadFile(
+  data.image[0],
+  userdata.$id
+);
 
       if (file) {
         const fileID = file.$id;
 
-        const dbpost = await service.createPost({
-          ...data,
-          featuredImage: fileID,
-          userId: userdata.$id,
-        });
+        // CHANGE: remove image before sending to DB
+        const { image, ...postData } = data;
+
+        const dbpost =
+          await service.createPost({
+            ...postData,
+            featuredImage: fileID,
+            userId: userdata.$id,
+          });
 
         if (dbpost) {
-          navigate(`/post/${dbpost.$id}`);
+          navigate(
+            `/post/${dbpost.$id}`
+          );
         }
       }
     } catch (error) {
@@ -97,17 +115,26 @@ const PostForm = ({ post }) => {
     }
   };
 
-  const slugTransform = useCallback((value) => {
-    if (value && typeof value === "string") {
-      return value
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9\s-]/g, "")
-        .replace(/\s+/g, "-");
-    }
+  const slugTransform = useCallback(
+    (value) => {
+      if (
+        value &&
+        typeof value === "string"
+      ) {
+        return value
+          .trim()
+          .toLowerCase()
+          .replace(
+            /[^a-zA-Z0-9\s-]/g,
+            ""
+          )
+          .replace(/\s+/g, "-");
+      }
 
-    return "";
-  }, []);
+      return "";
+    },
+    []
+  );
 
   useEffect(() => {
     const subscription = watch(
@@ -127,7 +154,11 @@ const PostForm = ({ post }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [watch, slugTransform, setValue]);
+  }, [
+    watch,
+    slugTransform,
+    setValue,
+  ]);
 
   return (
     <form
@@ -179,7 +210,7 @@ const PostForm = ({ post }) => {
           label="Featured Image :"
           type="file"
           className="mb-4"
-          accept="image/png, image/jpg, image/jpeg, image/gif"
+          accept="image/png,image/jpg,image/jpeg,image/gif"
           {...register("image", {
             required: !post,
           })}
@@ -198,7 +229,10 @@ const PostForm = ({ post }) => {
         )}
 
         <Select
-          options={["active", "inactive"]}
+          options={[
+            "active",
+            "inactive",
+          ]}
           label="Status"
           className="mb-4"
           {...register("status", {
@@ -215,7 +249,9 @@ const PostForm = ({ post }) => {
           }
           className="w-full"
         >
-          {post ? "Update" : "Submit"}
+          {post
+            ? "Update"
+            : "Submit"}
         </Button>
       </div>
     </form>
