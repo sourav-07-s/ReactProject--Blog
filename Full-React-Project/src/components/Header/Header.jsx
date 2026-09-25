@@ -36,7 +36,7 @@ export const Header = () => {
   ];
 
   return (
-    <header className="py-3 shadow bg-gray-800">
+    <header className="py-3 shadow bg-gray-800 border-amber-100 rounded-3xl w-80%">
       <Container>
         <nav className="flex items-center">
           <div className="mr-4">
