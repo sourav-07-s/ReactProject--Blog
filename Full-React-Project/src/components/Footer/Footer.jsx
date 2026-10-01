@@ -89,7 +89,7 @@ export default function Footer() {
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-500">
-            © 2026 ShopAssist. All Rights Reserved.
+            © 2026 Sourav. All Rights Reserved.
           </span>
 
           <a
