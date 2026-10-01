@@ -34,7 +34,7 @@ export const Header = () => {
       active: authStatus,
     },
   ];
-  // header 
+  // header part
   return (
     <header className="py-3 shadow bg-gray-800 ">
       <Container>
